@@ -62,7 +62,7 @@ function installsspanel {
 	#rm -f /var/www/index.html
 	rm -rf /var/www/*
 	rm -rf /var/www
-	git clone https://doboo@github.com/Doboo/ss-panel.git
+	git clone  https://doboo@github.com/Doboo/ss-panel.git -b old
 	#修改数据库连接
 	mv ss-panel www
 	sed -i 's/tuanDB/$dbname/g' /var/www/lib/config.php
@@ -76,7 +76,8 @@ function installsspanel {
 	#修改网站地址域名，以重置密码等
 	echo "Please input the tuanss number "
     read  tuannum
-	sed -i 's/000000/$tuannum/g' /var/www/lib/config.php
+	#修改导航菜单
+	sed -i 's/000000/$tuannum/g' /var/www/nav.php
 	doselect
 }
 
