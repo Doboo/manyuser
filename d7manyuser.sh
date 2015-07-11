@@ -6,7 +6,7 @@ if [[ $(id -u) != "0" ]]; then
 fi
 function installEnvironment {
     apt-get update -y
-    apt-get install unzip -y
+    #apt-get install unzip -y
 	#修改系统参数限制
 	echo "*                soft    nofile          8192" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
@@ -35,7 +35,7 @@ function installmanyuser {
 	 echo "log_stderr=true" >> /etc/supervisor/supervisord.conf
 	 echo "logfile=/var/log/tuanss.log" >> /etc/supervisor/supervisord.conf
 	#修改数据库地址
- sed -i 's/tuanDB/$dbname/g' /root/tuanss/shadowsocks/Config.py
+ sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/shadowsocks/Config.py
    	doselect
 }
 function installhttp {
@@ -62,14 +62,14 @@ function installsspanel {
 	#rm -f /var/www/index.html
 	rm -rf /var/www/*
 	rm -rf /var/www
-	git clone  https://doboo@github.com/Doboo/ss-panel.git -b old
+	git clone  https://doboo@github.com/Doboo/ss-panel.git 
 	#修改数据库连接
 	mv ss-panel www
-	sed -i 's/tuanDB/$dbname/g' /var/www/lib/config.php
+	sed -i 's/tuanDB/'$dbname'/g' /var/www/lib/config.php
 	#安装各种依赖
-	cd /var/www/
-	curl -sS https://getcomposer.org/installer | php
-	php composer.phar  install
+	#cd /var/www/
+	#curl -sS https://getcomposer.org/installer | php
+	#php composer.phar  install
      #配置权限，可以生成二维码
     chmod 777 /var/www/user/tmp
     chmod 777 /var/www/user/
@@ -77,7 +77,7 @@ function installsspanel {
 	echo "Please input the tuanss number "
     read  tuannum
 	#修改导航菜单
-	sed -i 's/000000/$tuannum/g' /var/www/nav.php
+	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
 	doselect
 }
 
@@ -126,7 +126,7 @@ esac
 printf "
 ####################################################
 #                                                  #
-# This is manyuser setup Proram  for debian7                    #
+# This is manyuser setup Proram  for debian7        #
 #                 #
 #                                                  #
 ####################################################
