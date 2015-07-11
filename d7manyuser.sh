@@ -24,7 +24,7 @@ function installmanyuser {
     #wget  http://128.199.224.80/tuanss/tuanss.zip
     #unzip -o tuanss.zip
     #rm -f tuanss.zip
-	git clone https://github.com/Doboo/tuanss.git
+	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
 	apt-get install supervisor -y
 	 echo "[program:tuanss]" >> /etc/supervisor/supervisord.conf
@@ -46,8 +46,8 @@ function installhttp {
 	/etc/init.d/apache2 restart
 	#Getting MySQL Support In PHP5
 	apt-cache search php5
-	apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl -y
-	 /etc/init.d/apache2 restart
+	apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear libjpeg* php5-imagick php5-imap php5-mcrypt php5-memcache  php5-ldap php5-odbc php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xml php5-xmlrpc php5-mbstring php5-mcrypt php5-bcmath php5-mhash libmcrypt -y
+	   /etc/init.d/apache2 restart
 	 apt-get install php-apc -y
 	 /etc/init.d/apache2 restart
 	doselect
@@ -62,7 +62,7 @@ function installsspanel {
 	#rm -f /var/www/index.html
 	rm -rf /var/www/*
 	rm -rf /var/www
-	git clone https://github.com/Doboo/ss-panel.git
+	git clone https://doboo@github.com/Doboo/ss-panel.git
 	#修改数据库连接
 	mv ss-panel www
 	sed -i 's/tuanDB/$dbname/g' /var/www/lib/config.php
