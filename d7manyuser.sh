@@ -15,6 +15,7 @@ function installEnvironment {
 #功能5
 function installmanyuser {
      #安装加密及mysql访问模块
+	apt-get install supervisor -y
     apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
 	apt-get install -y python-pip git python-m2crypto  python-setuptools
     pip install cymysql
@@ -26,9 +27,9 @@ function installmanyuser {
     #rm -f tuanss.zip
 	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
-	apt-get install supervisor -y
+	
 	 echo "[program:tuanss]" >> /etc/supervisor/supervisord.conf
-	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> /etc/supervisord.conf
+	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> /etc/etc/supervisor/supervisord.conf
 	 echo "autostart=true" >> /etc/supervisor/supervisord.conf
 	 echo "autorestart=true" >> /etc/supervisor/supervisord.conf
 	 echo "user=root" >> /etc/supervisor/supervisord.conf
