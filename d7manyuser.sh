@@ -21,9 +21,10 @@ function installmanyuser {
     
     #下载后台程序
     cd  /root/
-    wget  http://128.199.224.80/tuanss/tuanss.zip
-    unzip -o tuanss.zip
-    rm -f tuanss.zip
+    #wget  http://128.199.224.80/tuanss/tuanss.zip
+    #unzip -o tuanss.zip
+    #rm -f tuanss.zip
+	git clone https://github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
 	apt-get install supervisor -y
 	 echo "[program:tuanss]" >> /etc/supervisor/supervisord.conf
@@ -55,11 +56,15 @@ function installhttp {
 function installsspanel {
     #安装软件
     #下载页面
-    cd /var/www/
-    wget   http://128.199.224.80/tuanss/ss-panel.zip
-    unzip -o ss-panel.zip  &&  rm -f ss-panel.zip
-	rm -f /var/www/index.html
+    cd /var/
+   # wget   http://128.199.224.80/tuanss/ss-panel.zip
+   # unzip -o ss-panel.zip  &&  rm -f ss-panel.zip
+	#rm -f /var/www/index.html
+	rm -rf /var/www/*
+	rm -rf /var/www
+	git clone https://github.com/Doboo/ss-panel.git
 	#修改数据库连接
+	mv ss-panel www
 	sed -i 's/tuan10/$dbname/g' /var/www/lib/config.php
      #配置权限，可以生成二维码
     chmod 777 /var/www/user/tmp
