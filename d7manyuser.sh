@@ -46,7 +46,7 @@ function installhttp {
 	/etc/init.d/apache2 restart
 	#Getting MySQL Support In PHP5
 	apt-cache search php5
-	apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear libjpeg* php5-imagick php5-imap php5-mcrypt php5-memcache  php5-ldap php5-odbc php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xml php5-xmlrpc php5-mbstring php5-mcrypt php5-bcmath php5-mhash libmcrypt -y
+	apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl -y
 	   /etc/init.d/apache2 restart
 	 apt-get install php-apc -y
 	 /etc/init.d/apache2 restart
