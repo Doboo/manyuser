@@ -35,7 +35,7 @@ function installmanyuser {
 	 echo "log_stderr=true" >> /etc/supervisor/supervisord.conf
 	 echo "logfile=/var/log/tuanss.log" >> /etc/supervisor/supervisord.conf
 	#修改数据库地址
- sed -i 's/myuser/$dbname/g' /root/tuanss/shadowsocks/Config.py
+ sed -i 's/tuanDB/$dbname/g' /root/tuanss/shadowsocks/Config.py
    	doselect
 }
 function installhttp {
@@ -65,10 +65,18 @@ function installsspanel {
 	git clone https://github.com/Doboo/ss-panel.git
 	#修改数据库连接
 	mv ss-panel www
-	sed -i 's/tuan10/$dbname/g' /var/www/lib/config.php
+	sed -i 's/tuanDB/$dbname/g' /var/www/lib/config.php
+	#安装各种依赖
+	cd /var/www/
+	curl -sS https://getcomposer.org/installer | php
+	php composer.phar  install
      #配置权限，可以生成二维码
     chmod 777 /var/www/user/tmp
     chmod 777 /var/www/user/
+	#修改网站地址域名，以重置密码等
+	echo "Please input the tuanss number "
+    read  tuannum
+	sed -i 's/000000/$tuannum/g' /var/www/lib/config.php
 	doselect
 }
 
@@ -87,16 +95,7 @@ function installserverspeeder {
   }
 
 #更新页面程序
-function updatesspanel {
-   rm -rf /var/www/*
-    cd /var/www/
-    wget   http://128.199.224.80/tuanss/ss-panel.zip
-    unzip -o ss-panel.zip  &&  rm -f ss-panel.zip
-  
-	#修改数据库连接
-	sed -i 's/tuan10/$dbname/g' /var/www/lib/config.php
-	doselect
-}
+
 
 #选择要进行的操作
 function doselect {
@@ -118,7 +117,6 @@ case "$num" in
 [4] ) (installmanyuser);;
 [5] ) (installmysql);;
 [6] ) (installserverspeeder);;
-[7] ) (updatesspanel);;
 *) echo "OK,Bye!";;
 esac
 }
