@@ -29,7 +29,7 @@ function installmanyuser {
 	#用supervisord守护进程启动程序
 	
 	 echo "[program:tuanss]" >> /etc/supervisor/supervisord.conf
-	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> /etc/etc/supervisor/supervisord.conf
+	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> /etc/supervisor/supervisord.conf
 	 echo "autostart=true" >> /etc/supervisor/supervisord.conf
 	 echo "autorestart=true" >> /etc/supervisor/supervisord.conf
 	 echo "user=root" >> /etc/supervisor/supervisord.conf
