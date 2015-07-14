@@ -6,11 +6,18 @@ if [[ $(id -u) != "0" ]]; then
 fi
 function installEnvironment {
     apt-get update -y
+	#安装ssh登录保护
+	apt-get install denyhosts 
     #apt-get install unzip -y
 	#修改系统参数限制
 	echo "*                soft    nofile          8192" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
 	doselect
+	
+	#限制端口速度100M
+	apt-get install wondershaper
+# limit bandwidth to 100Mb/100Mb on eth0
+   wondershaper eth0 100000 100000
 }
 #功能5
 function installmanyuser {
