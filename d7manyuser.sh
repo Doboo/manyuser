@@ -36,12 +36,25 @@ function installmanyuser {
 	#用supervisord守护进程启动程序
 	
 	 echo "[program:tuanss]" >> /etc/supervisor/supervisord.conf
-	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> /etc/supervisor/supervisord.conf
+	 echo "command=python /root/tuanss/server.py -c /root/tuanss/config.json" >> /etc/supervisor/supervisord.conf
 	 echo "autostart=true" >> /etc/supervisor/supervisord.conf
 	 echo "autorestart=true" >> /etc/supervisor/supervisord.conf
 	 echo "user=root" >> /etc/supervisor/supervisord.conf
-	 echo "log_stderr=true" >> /etc/supervisor/supervisord.conf
-	 echo "logfile=/var/log/tuanss.log" >> /etc/supervisor/supervisord.conf
+	 #是否将程序错误信息重定向的到文件
+	 echo "redirect_stderr=true" >> /etc/supervisor/supervisord.conf
+	 #将程序输出重定向到该文件
+	 echo "stdout_logfile=/var/log/tuanss.log" >> /etc/supervisor/supervisord.conf
+	 #将程序错误信息重定向到该文件
+	 echo "stderr_logfile=/var/log/tuanss-err.log" >> /etc/supervisor/supervisord.conf
+	  #通过网页访问日志
+	 echo " [inet_http_server]" >> /etc/supervisor/supervisord.conf
+	 #IP和绑定端口
+	 echo "port = 0.0.0.0:9001" >> /etc/supervisor/supervisord.conf
+	 #管理员名称
+	 echo "username = admin" >> /etc/supervisor/supervisord.conf
+	 #管理员密码
+     echo "password = 111111" >> /etc/supervisor/supervisord.conf
+
 	#修改数据库地址
  sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/shadowsocks/Config.py
    	doselect
