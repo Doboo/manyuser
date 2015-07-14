@@ -31,8 +31,16 @@ function installmanyuser {
 	 echo "autostart=true" >> /etc/supervisord.conf
 	 echo "autorestart=true" >> /etc/supervisord.conf
 	 echo "user=root" >> /etc/supervisord.conf
-	 #echo "log_stderr=true" >> /etc/supervisord.conf
-	 #echo "logfile=/var/log/tuanss.log" >> /etc/supervisord.conf
+	 echo "log_stderr=true" >> /etc/supervisord.conf
+	 echo "logfile=/var/log/tuanss.log" >> /etc/supervisord.conf
+	 #增加监视功能
+	 #注释掉第一行
+	  sed -i 's/http_port=/var/;http_port=/var/g' /etc/supervisord.conf
+	  #秀爱监听
+	  sed -i 's/;http_port=127.0.0.1:9001/http_port=0.0.0.0:9001/g' /etc/supervisord.conf
+	  sed -i 's/;http_username=user/http_username=admin/g' /etc/supervisord.conf
+	  sed -i 's/;http_password=123/http_password=111111/g' /etc/supervisord.conf
+	 
 	 # 修改数据库连接信息
 	echo "Please input the tuanss database name "
      read dbname
