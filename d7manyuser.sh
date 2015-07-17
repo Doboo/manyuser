@@ -18,6 +18,20 @@ function installEnvironment {
 	apt-get install wondershaper
 # limit bandwidth to 100Mb/100Mb on eth0
    wondershaper eth0 100000 100000
+   
+   #修改系统时区设置
+   rm /etc/localtime
+   cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+   dpkg-reconfigure tzdata
+   #安装系统时间同步工具
+   apt-get install ntpdate
+   ntpdate 129.6.15.28
+   ntpdate time.nist.org 
+   #查看定时器设置
+   crontab -l
+   #创建定时重启任务
+   crontab -e
+   
 }
 #功能5
 function installmanyuser {
@@ -107,6 +121,7 @@ function installmysql {
    apt-get install mysql-server mysql-client -y
    apt-get install phpmyadmin -y
 }
+#功能6 安装serverspeeder
 function installserverspeeder {
    wget http://my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz
    tar xzvf serverSpeederInstaller.tar.gz 
