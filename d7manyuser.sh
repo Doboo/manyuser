@@ -96,22 +96,24 @@ function installsspanel {
 	#rm -f /var/www/index.html
 	rm -rf /var/www/*
 	rm -rf /var/www
-	git clone  https://doboo@github.com/Doboo/ss-panel.git 
+	#新的版本分支
+	git clone -b new https://doboo@github.com/Doboo/ss-panel.git 
 	#修改数据库连接
 	mv ss-panel www
 	sed -i 's/tuanDB/'$dbname'/g' /var/www/lib/config.php
-	#安装各种依赖
-	#cd /var/www/
-	#curl -sS https://getcomposer.org/installer | php
-	#php composer.phar  install
+	#安装各种依赖，mailgun
+	cd /var/www/
+	curl -sS https://getcomposer.org/installer | php
+	php composer.phar  install
      #配置权限，可以生成二维码
     chmod 777 /var/www/user/tmp
     chmod 777 /var/www/user/
 	#修改网站地址域名，以重置密码等
 	echo "Please input the tuanss number "
     read  tuannum
-	#修改导航菜单
+	#修改导航菜单和站点名称
 	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
+	sed -i 's/mysitename/tuanss'$tuannum'/g' /var/www/lib/config.php
 	doselect
 }
 
