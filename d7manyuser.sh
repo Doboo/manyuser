@@ -12,9 +12,7 @@ function installEnvironment {
 	#修改系统参数限制
 	echo "*                soft    nofile          8192" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
-	doselect
-	
-	#限制端口速度100M
+		#限制端口速度100M
 	apt-get install wondershaper
 # limit bandwidth to 100Mb/100Mb on eth0
    wondershaper eth0 100000 100000
@@ -31,6 +29,7 @@ function installEnvironment {
    crontab -l
    #创建定时重启任务
    crontab -e
+   doselect
    
 }
 #功能5
@@ -61,7 +60,7 @@ function installmanyuser {
 	 #将程序错误信息重定向到该文件
 	 echo "stderr_logfile=/var/log/tuanss-err.log" >> /etc/supervisor/supervisord.conf
 	  #通过网页访问日志
-	 echo " [inet_http_server]" >> /etc/supervisor/supervisord.conf
+	 echo "[inet_http_server]" >> /etc/supervisor/supervisord.conf
 	 #IP和绑定端口
 	 echo "port = 0.0.0.0:9001" >> /etc/supervisor/supervisord.conf
 	 #管理员名称
@@ -70,7 +69,7 @@ function installmanyuser {
      echo "password = 111111" >> /etc/supervisor/supervisord.conf
 
 	#修改数据库地址
- sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/shadowsocks/Config.py
+ sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/Config.py
    	doselect
 }
 function installhttp {
