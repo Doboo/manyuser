@@ -113,6 +113,7 @@ function installsspanel {
     read  tuannum
 	#修改导航菜单和站点名称
 	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
+	sed -i 's/000000/'$tuannum'/g' /var/www/lib/config.php
 	sed -i 's/mysitename/tuanss'$tuannum'/g' /var/www/lib/config.php
 	doselect
 }
