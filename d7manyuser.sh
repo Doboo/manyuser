@@ -25,10 +25,11 @@ function installEnvironment {
    apt-get install ntpdate
    ntpdate 129.6.15.28
    ntpdate time.nist.org 
-   #查看定时器设置
-   crontab -l
    #创建定时重启任务
    crontab -e
+   
+  #查看定时器设置
+  crontab -l
    doselect
    
 }
@@ -69,7 +70,18 @@ function installmanyuser {
      echo "password = 111111" >> /etc/supervisor/supervisord.conf
 
 	#修改数据库地址
- sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/Config.py
+	 sed -i 's/tuanDB/'$dbname'/g' /root/tuanss/Config.py
+	 #将后台管理管理程序的端口随机化
+	 pool=(23330 23331 23332 23333 23334 23335 23336 23337 23338 23339 23339)
+	 num=${#pool[*]}
+	 result=${pool[$((RANDOM%num))]}
+	 echo $result
+	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/tuanss/Config.py
+
+
+num=${#pool[*]}
+
+result=${pool[$((RANDOM%num))]}
    	doselect
 }
 function installhttp {
