@@ -42,6 +42,7 @@ function installmanyuser {
     apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
 	apt-get install -y python-pip git python-m2crypto  python-setuptools
     pip install cymysql
+	cd /root/
 	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
 	mypath="/etc/supervisor/supervisord.conf"
