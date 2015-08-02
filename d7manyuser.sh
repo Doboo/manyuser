@@ -158,6 +158,10 @@ function installsspanel {
 	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
 	sed -i 's/000000/'$tuannum'/g' /var/www/lib/config.php
 	sed -i 's/mysitename/tuanss'$tuannum'/g' /var/www/lib/config.php
+	#ÐÞ¸ÄÍøÕ¾¶Ë¿Ú
+	sed -i 's/VirtualHost *:80/VirtualHost *:8080/g' /etc/apache2/sites-enabled/000-default
+	sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+	
 	doselect
 }
 
