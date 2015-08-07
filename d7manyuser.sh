@@ -15,6 +15,7 @@ function installEnvironment {
 	#修改系统参数限制
 	echo "*                soft    nofile          8192" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
+
 	#限制端口速度100M
 	apt-get install wondershaper
 	# limit bandwidth to 100Mb/100Mb on eth0
@@ -87,6 +88,11 @@ function installmanyuser {
 	cd /root/
 	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
+	echo "ulimit -n 51200" >> /etc/default/supervisor
+    echo "ulimit -Sn 4096" >> /etc/default/supervisor
+    echo "ulimit -Hn 8192" >> /etc/default/supervisor
+	
+	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:tuanss]" >> $mypath
 	 echo "command=python /root/tuanss/server.py -c /root/tuanss/config.json" >> $mypath
