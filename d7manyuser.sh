@@ -12,10 +12,16 @@ function installEnvironment {
 	apt-get update -y
 
 	#apt-get install unzip -y
-	#修改系统参数限制
-	echo "*                soft    nofile          8192" >>  /etc/security/limits.conf
+	#修改系统参数限制,方法1
+	echo "*                soft    nofile          65535" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
-
+	 #方法2
+	 #echo "ulimit -SHn 65535" >> /etc/rc.local
+	 #方法3
+	 echo "ulimit -SHn 65535" >> /etc/profile
+    echo "ulimit -n 51200" >> /etc/default/supervisor
+    #echo "ulimit -Sn 4096" >> /etc/default/supervisor
+   # echo "ulimit -Hn 8192" >> /etc/default/supervisor
 	#限制端口速度100M
 	apt-get install wondershaper
 	# limit bandwidth to 100Mb/100Mb on eth0
@@ -60,6 +66,12 @@ net.ipv4.tcp_wmem = 4096 65536 67108864
 net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
 _EOF_
+
+# for high-latency network
+#net.ipv4.tcp_congestion_control = hybla
+#低延迟网络应该选择下面一种
+# for low-latency network, use cubic instead
+# net.ipv4.tcp_congestion_control = cubic
 #使参数生效
 sysctl --system
 #安装ssh登录保护
@@ -88,9 +100,7 @@ function installmanyuser {
 	cd /root/
 	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
-	echo "ulimit -n 51200" >> /etc/default/supervisor
-    echo "ulimit -Sn 4096" >> /etc/default/supervisor
-    echo "ulimit -Hn 8192" >> /etc/default/supervisor
+	
 	
 	
 	mypath="/etc/supervisor/supervisord.conf"
