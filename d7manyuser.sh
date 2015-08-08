@@ -67,11 +67,11 @@ _EOF_
 }
 function installEnvironment {
 	#解决public key的问题
-	apt-get install debian-keyring debian-archive-keyring
+	apt-get install debian-keyring debian-archive-keyring -y
 	apt-key update
 	apt-get update -y
 	#限制端口速度100M
-	apt-get install wondershaper
+	apt-get install wondershaper -y
 	# limit bandwidth to 100Mb/100Mb on eth0
 	wondershaper eth0 100000 100000
 	#修改系统时区设置
