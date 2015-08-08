@@ -13,8 +13,8 @@ net.core.rmem_max = 67108864
 net.core.wmem_max = 67108864
 net.core.rmem_default = 65536
 net.core.wmem_default = 65536
-net.core.netdev_max_backlog = 4096
-net.core.somaxconn = 4096
+net.core.netdev_max_backlog = 250000
+net.core.somaxconn = 3240000
 
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_tw_reuse = 1
@@ -31,6 +31,12 @@ net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
 _EOF_
 
+#开启算法
+/sbin/modprobe tcp_hybla
+#优先使用
+echo "net.ipv4.tcp_congestion_control=hybla" >> /etc/sysctl.conf
+
+
 }
 function lowlatency {
 	cat << _EOF_ >/etc/sysctl.d/local.conf
@@ -40,8 +46,8 @@ net.core.rmem_max = 67108864
 net.core.wmem_max = 67108864
 net.core.rmem_default = 65536
 net.core.wmem_default = 65536
-net.core.netdev_max_backlog = 4096
-net.core.somaxconn = 4096
+net.core.netdev_max_backlog = 250000
+net.core.somaxconn = 3240000
 
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_tw_reuse = 1
@@ -64,18 +70,6 @@ function installEnvironment {
 	apt-get install debian-keyring debian-archive-keyring
 	apt-key update
 	apt-get update -y
-
-	#apt-get install unzip -y
-	#修改系统参数限制,方法1
-	echo "*                soft    nofile          65535" >>  /etc/security/limits.conf
-	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
-	 #方法2
-	 #echo "ulimit -SHn 65535" >> /etc/rc.local
-	 #方法3
-	 echo "ulimit -SHn 65535" >> /etc/profile
-    echo "ulimit -n 51200" >> /etc/default/supervisor
-    #echo "ulimit -Sn 4096" >> /etc/default/supervisor
-   # echo "ulimit -Hn 8192" >> /etc/default/supervisor
 	#限制端口速度100M
 	apt-get install wondershaper
 	# limit bandwidth to 100Mb/100Mb on eth0
@@ -94,19 +88,28 @@ function installEnvironment {
 	echo "00 05 * * * root /sbin/reboot" >>/etc/crontab
 	#重启定时器
 	/etc/init.d/cron restart
-	
-	#以下内容是按照教程优化的https://github.com/shadowsocks/shadowsocks/wiki/%E4%BC%98%E5%8C%96-Shadowsocks
-
-# for high-latency network
-#net.ipv4.tcp_congestion_control = hybla
-#低延迟网络应该选择下面一种
-# for low-latency network, use cubic instead
-# net.ipv4.tcp_congestion_control = cubic
-#使参数生效
+	#apt-get install unzip -y
+	#修改系统参数限制,方法1
+	echo "*                soft    nofile          65535" >>  /etc/security/limits.conf
+	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
+	 #方法2
+	 #echo "ulimit -SHn 65535" >> /etc/rc.local
+	 #方法3
+	 echo "ulimit -SHn 65535" >> /etc/profile
+     echo "ulimit -n 51200" >> /etc/default/supervisor
+    #echo "ulimit -Sn 4096" >> /etc/default/supervisor
+   # echo "ulimit -Hn 8192" >> /etc/default/supervisor
+   
+   #
+   echo "session required pam_limits.so" >> /etc/pam.d/common-session
+   
+#查看支持的优化算法
+sysctl net.ipv4.tcp_available_congestion_control
 
 echo "Please select your latency"
-echo "1. highlatency"
-echo "2. lowlatency"
+
+echo "1. highlatency hybla"
+echo "2. lowlatency cubic"
 
 read num
 case "$num" in
