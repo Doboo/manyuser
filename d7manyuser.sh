@@ -79,7 +79,7 @@ function installEnvironment {
 	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 	dpkg-reconfigure tzdata
 	#安装系统时间同步工具
-	apt-get install ntpdate
+	apt-get install ntpdate -y
 	ntpdate 129.6.15.28
 	#ntpdate time.nist.org 
 	#创建定时重启任务
