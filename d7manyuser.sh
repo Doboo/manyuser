@@ -149,7 +149,7 @@ function installmanyuser {
 	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:tuanss]" >> $mypath
-	 echo "command=python /root/tuanss/server.py -c /root/tuanss/config.json" >> $mypath
+	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/shadowsocks/tuanss/config.json" >> $mypath
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
 	 echo "user=root" >> $mypath
@@ -169,13 +169,13 @@ function installmanyuser {
      echo "password = 111111" >> $mypath
 
 	#修改数据库地址
-	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/tuanss/Config.py
+	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/tuanss/shadowsocks/Config.py
 	 #将后台管理管理程序的端口随机化
 	 pool=(23330 23331 23332 23333 23334 23335 23336 23337 23338 23339 23339)
 	 num=${#pool[*]}
 	 result=${pool[$((RANDOM%num))]}
 	 echo $result
-	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/tuanss/Config.py
+	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/tuanss/shadowsocks/Config.py
    	 doselect
 }
 #功能2
@@ -229,6 +229,9 @@ function installsspanel {
 function installmysql {
    apt-get install mysql-server mysql-client -y
    apt-get install phpmyadmin -y
+   sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
+   /etc/init.d/mysql restart
+
 }
 #功能6 安装serverspeeder
 function installserverspeeder {
