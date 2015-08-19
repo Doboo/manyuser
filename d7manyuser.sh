@@ -70,6 +70,7 @@ function installEnvironment {
 	apt-get install debian-keyring debian-archive-keyring -y
 	apt-key update
 	apt-get update -y
+	apt-get upgrade -y
 	#限制端口速度100M
 	apt-get install wondershaper -y
 	# limit bandwidth to 100Mb/100Mb on eth0
