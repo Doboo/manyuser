@@ -238,10 +238,14 @@ function installmysql {
 function installserverspeeder {
 	wget http://my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz
 	tar xzvf serverSpeederInstaller.tar.gz 
-	bash serverSpeederInstaller.sh
+	#bash serverSpeederInstaller.sh
+	bash serverSpeederInstaller.sh -e 38196962@qq.com -p 7758521 -r  -b
 	sed -i 's/advinacc="0"/advinacc="1"/g' /serverspeeder/etc/config
 	sed -i 's/maxmode="0"/maxmode="1"/g' /serverspeeder/etc/config
 	sed -i 's/rsc=""/rsc="1"/g' /serverspeeder/etc/config
+	  #增加启动项
+	sed -i '/exit/d' /etc/rc.local
+    echo "/serverspeeder/bin/serverSpeeder.sh start" >>  /etc/rc.local
   }
 
 #更新页面程序
