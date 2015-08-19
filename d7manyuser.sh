@@ -72,9 +72,9 @@ function installEnvironment {
 	apt-get update -y
 	apt-get upgrade -y
 	#限制端口速度100M
-	apt-get install wondershaper -y
+	#apt-get install wondershaper -y
 	# limit bandwidth to 100Mb/100Mb on eth0
-	wondershaper eth0 100000 100000
+	#wondershaper eth0 100000 100000
 	#修改系统时区设置
 	rm /etc/localtime
 	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
