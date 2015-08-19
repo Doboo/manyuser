@@ -150,7 +150,7 @@ function installmanyuser {
 	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:tuanss]" >> $mypath
-	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/shadowsocks/tuanss/config.json" >> $mypath
+	 echo "command=python /root/tuanss/shadowsocks/server.py -c /root/tuanss/shadowsocks/config.json" >> $mypath
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
 	 echo "user=root" >> $mypath
