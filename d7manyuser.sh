@@ -230,8 +230,14 @@ function installsspanel {
 function installmysql {
    apt-get install mysql-server mysql-client -y
    apt-get install phpmyadmin -y
+   #解除绑定，允许远程访问
    sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
-   /etc/init.d/mysql restart
+   echo "Please input root password to GRANT ALL PRIVILEGES"
+    read sqlPASSWORD
+   #赋予root用户远程权限
+    mysql -u root -p${sqlPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zhangyongqi' WITH GRANT OPTION"
+    mysql -u root -p${sqlPASSWORD} -e "FLUSH PRIVILEGES"
+    /etc/init.d/mysql restart
 
 }
 #功能6 安装serverspeeder
@@ -247,6 +253,27 @@ function installserverspeeder {
 	sed -i '/exit/d' /etc/rc.local
     echo "/serverspeeder/bin/serverSpeeder.sh start" >>  /etc/rc.local
   }
+#功能6 安装vps代理，需占用443端口
+function installvps {
+cd /root/
+wget  https://github.com/phuslu/goproxy/releases/download/goproxy/vps_linux_amd64.tar.bz2
+tar -xjvf vps_linux_amd64.tar.bz2
+./vps
+
+mypath="/etc/supervisor/supervisord.conf"
+	 echo "[program:vps]" >> $mypath
+	 echo "command=/root/vps" >> $mypath
+	 echo "autostart=true" >> $mypath
+	 echo "autorestart=true" >> $mypath
+	 echo "user=root" >> $mypath
+	 #是否将程序错误信息重定向的到文件
+	 echo "redirect_stderr=true" >> $mypath
+	 #将程序输出重定向到该文件
+	 echo "stdout_logfile=/var/log/vps.log" >> $mypath
+	 #将程序错误信息重定向到该文件
+	 echo "stderr_logfile=/var/log/vps.log" >> $mypath
+	  
+  }
 
 #更新页面程序
 
@@ -261,7 +288,7 @@ echo "3. install ss-panel"
 echo "4. install manyuser"
 echo "5. install mysql and phpmyadmin"
 echo "6. install serverspeeder"
-echo "7. update ss-panel"
+echo "7. install vps"
 
 read num
 case "$num" in
@@ -271,6 +298,7 @@ case "$num" in
 [4] ) (installmanyuser);;
 [5] ) (installmysql);;
 [6] ) (installserverspeeder);;
+[7] ) (installvps);;
 *) echo "OK,Bye!";;
 esac
 }
