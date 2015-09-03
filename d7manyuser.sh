@@ -253,7 +253,7 @@ function installserverspeeder {
 	sed -i '/exit/d' /etc/rc.local
     echo "/serverspeeder/bin/serverSpeeder.sh start" >>  /etc/rc.local
   }
-#功能6 安装vps代理，需占用443端口
+#功能7 安装vps代理，需占用443端口
 function installvps {
 cd /root/
 wget  https://github.com/phuslu/goproxy/releases/download/goproxy/vps_linux_amd64.tar.bz2
@@ -275,9 +275,23 @@ mypath="/etc/supervisor/supervisord.conf"
 	  
   }
 
-#更新页面程序
-
-
+#
+#创建proftpd ftp服务器
+function installFTP {
+aptitude install proftpd -y
+mkdir /var/ftp
+#给予文件夹权限
+chomd 777 /var/ftp
+#增加用户
+useradd -d /var/ftp/ -s /usr/sbin/nologin zhangyongqi
+#设置密码
+passwd zhangyongqi
+sed -i 's/# RequireValidShell"/RequireValidShell/g' /etc/proftpd/proftpd.conf
+echo "AllowRetrieveRestart    on  " >> /etc/proftpd/proftpd.conf
+echo "AllowStoreRestart       on " >> /etc/proftpd/proftpd.conf
+echo "DefaultRoot             ~  " >> /etc/proftpd/proftpd.conf
+	
+  }
 #选择要进行的操作
 function doselect {
 echo "Please select your operation "
@@ -289,6 +303,7 @@ echo "4. install manyuser"
 echo "5. install mysql and phpmyadmin"
 echo "6. install serverspeeder"
 echo "7. install vps"
+echo "7. install ftp"
 
 read num
 case "$num" in
@@ -299,6 +314,7 @@ case "$num" in
 [5] ) (installmysql);;
 [6] ) (installserverspeeder);;
 [7] ) (installvps);;
+[8] ) (installftp);;
 *) echo "OK,Bye!";;
 esac
 }
