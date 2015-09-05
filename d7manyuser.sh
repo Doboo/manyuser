@@ -280,21 +280,24 @@ mypath="/etc/supervisor/supervisord.conf"
 #创建proftpd ftp服务器
 function installftp {
 aptitude install proftpd -y
-echo "Please input the ftp path"
-read  ftppath
-mkdir $ftpath
+
+mkdir /var/ftp
 #给予文件夹权限
-chomd 777 $ftpath
+chmod 777 /var/ftp
 #增加用户
 echo "Please input the ftp username"
 read  ftpuser
-useradd -d $ftpath -s /usr/sbin/nologin $ftpuser
+useradd -d /var/ftp -s /usr/sbin/nologin $ftpuser
 #设置密码
 passwd $ftpuser
-sed -i 's/# RequireValidShell"/RequireValidShell/g' /etc/proftpd/proftpd.conf
-echo "AllowRetrieveRestart    on  " >> /etc/proftpd/proftpd.conf
-echo "AllowStoreRestart       on " >> /etc/proftpd/proftpd.conf
-echo "DefaultRoot             ~  " >> /etc/proftpd/proftpd.conf
+sed -i '/RequireValidShell/d' /etc/proftpd/proftpd.conf
+#sed -i 's/# RequireValidShell"/RequireValidShell/g' /etc/proftpd/proftpd.conf
+echo "RequireValidShell		off " >> /etc/proftpd/proftpd.conf
+ 
+echo "AllowRetrieveRestart    on" >> /etc/proftpd/proftpd.conf
+echo "AllowStoreRestart       on" >> /etc/proftpd/proftpd.conf
+echo "DefaultRoot             ~" >> /etc/proftpd/proftpd.conf
+/etc/init.d/proftpd restart
 doselect	
   }
 #选择要进行的操作
