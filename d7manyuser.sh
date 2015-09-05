@@ -278,7 +278,7 @@ mypath="/etc/supervisor/supervisord.conf"
 
 #
 #创建proftpd ftp服务器
-function installFTP {
+function installftp {
 aptitude install proftpd -y
 echo "Please input the ftp path"
 read  ftppath
