@@ -238,7 +238,7 @@ function installmysql {
     mysql -u root -p${sqlPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zhangyongqi' WITH GRANT OPTION"
     mysql -u root -p${sqlPASSWORD} -e "FLUSH PRIVILEGES"
     /etc/init.d/mysql restart
-
+doselect
 }
 #功能6 安装serverspeeder
 function installserverspeeder {
@@ -252,6 +252,7 @@ function installserverspeeder {
 	  #增加启动项
 	sed -i '/exit/d' /etc/rc.local
     echo "/serverspeeder/bin/serverSpeeder.sh start" >>  /etc/rc.local
+	doselect
   }
 #功能7 安装vps代理，需占用443端口
 function installvps {
@@ -272,25 +273,29 @@ mypath="/etc/supervisor/supervisord.conf"
 	 echo "stdout_logfile=/var/log/vps.log" >> $mypath
 	 #将程序错误信息重定向到该文件
 	 echo "stderr_logfile=/var/log/vps.log" >> $mypath
-	  
+	doselect  
   }
 
 #
 #创建proftpd ftp服务器
 function installFTP {
 aptitude install proftpd -y
-mkdir /var/ftp
+echo "Please input the ftp path"
+read  ftppath
+mkdir $ftpath
 #给予文件夹权限
-chomd 777 /var/ftp
+chomd 777 $ftpath
 #增加用户
-useradd -d /var/ftp/ -s /usr/sbin/nologin zhangyongqi
+echo "Please input the ftp username"
+read  ftpuser
+useradd -d $ftpath -s /usr/sbin/nologin $ftpuser
 #设置密码
-passwd zhangyongqi
+passwd $ftpuser
 sed -i 's/# RequireValidShell"/RequireValidShell/g' /etc/proftpd/proftpd.conf
 echo "AllowRetrieveRestart    on  " >> /etc/proftpd/proftpd.conf
 echo "AllowStoreRestart       on " >> /etc/proftpd/proftpd.conf
 echo "DefaultRoot             ~  " >> /etc/proftpd/proftpd.conf
-	
+doselect	
   }
 #选择要进行的操作
 function doselect {
