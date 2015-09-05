@@ -308,7 +308,7 @@ echo "4. install manyuser"
 echo "5. install mysql and phpmyadmin"
 echo "6. install serverspeeder"
 echo "7. install vps"
-echo "7. install ftp"
+echo "8. install ftp"
 
 read num
 case "$num" in
