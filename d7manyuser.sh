@@ -65,6 +65,18 @@ net.ipv4.tcp_congestion_control = cubic
 _EOF_
 
 }
+
+function changssh {
+#更改ssh端口
+ sed -i 's/Port 22/Port 8799/g'  /etc/ssh/sshd_config
+#启用ssh key登录，
+  mkdir /root/.ssh
+ echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAiH6uaXQA0K54of5TdpGP9v2z9CaXqnnwyNoCMwkRYPH3X7CJk61HunR59zgDoAbT/+eJiCbSEN5/27gGd1kysct/4PDzJ/JpJI3OhKk2185LRoa/BXZaGfEUz4r53M01tGTMyom9VGjFroTUHeBkj2BfAzIo+SFp+ij1RRzM75ZN/y84rGUvGR8+tM3+PbE+6W0mvY6EdKD0YY0bGtcO9xMaFB7sfZk/fUxQSNnrkfYNKA5rWIlLC3JNXwp0M77dK2pSvU3mGodC6UvWv2GU4Q++tj577M9QTv2bI6Lt7nwQHORcAZ5oknNjTKfO8cyvzN8jjCUKzj5zLave6YJB2Q== rsa-key-20150202" >> /root/.ssh/authorized_keys
+	
+	 sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+	#禁用密码登录
+	 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+  }
 function installEnvironment {
 	#解决public key的问题
 	apt-get install debian-keyring debian-archive-keyring -y
@@ -121,15 +133,15 @@ esac
 sysctl --system
 #安装ssh登录保护
 apt-get install denyhosts 
-#更改ssh端口
- sed -i 's/Port 22/Port 8799/g'  /etc/ssh/sshd_config
-#启用ssh key登录，
-  mkdir /root/.ssh
- echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAiH6uaXQA0K54of5TdpGP9v2z9CaXqnnwyNoCMwkRYPH3X7CJk61HunR59zgDoAbT/+eJiCbSEN5/27gGd1kysct/4PDzJ/JpJI3OhKk2185LRoa/BXZaGfEUz4r53M01tGTMyom9VGjFroTUHeBkj2BfAzIo+SFp+ij1RRzM75ZN/y84rGUvGR8+tM3+PbE+6W0mvY6EdKD0YY0bGtcO9xMaFB7sfZk/fUxQSNnrkfYNKA5rWIlLC3JNXwp0M77dK2pSvU3mGodC6UvWv2GU4Q++tj577M9QTv2bI6Lt7nwQHORcAZ5oknNjTKfO8cyvzN8jjCUKzj5zLave6YJB2Q== rsa-key-20150202" >> /root/.ssh/authorized_keys
-	
-	 sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-	#禁用密码登录
-	 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+echo "Do you want to change SSH"
+
+echo "1. YES"
+read num
+case "$num" in
+[1] ) (changssh);;
+
+*) echo "OK,No Change";;
+esac
 	
 	doselect
  }
@@ -235,8 +247,8 @@ function installmysql {
    echo "Please input root password to GRANT ALL PRIVILEGES"
     read sqlPASSWORD
    #赋予root用户远程权限
-    mysql -u root -p${sqlPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zhangyongqi' WITH GRANT OPTION"
-    mysql -u root -p${sqlPASSWORD} -e "FLUSH PRIVILEGES"
+    mysql -u root -p${sqlPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zhangyongqi' WITH GRANT OPTION;"
+    mysql -u root -p${sqlPASSWORD} -e "FLUSH PRIVILEGES;"
     /etc/init.d/mysql restart
 doselect
 }
