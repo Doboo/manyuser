@@ -247,8 +247,8 @@ function installmysql {
    echo "Please input root password to GRANT ALL PRIVILEGES"
     read sqlPASSWORD
    #赋予root用户远程权限
-    mysql -u root -p${sqlPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zhangyongqi' WITH GRANT OPTION;"
-    mysql -u root -p${sqlPASSWORD} -e "FLUSH PRIVILEGES;"
+    mysql -u root -p“${sqlPASSWORD}” -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${sqlPASSWORD}' WITH GRANT OPTION;"
+    mysql -u root -p“${sqlPASSWORD}” -e "FLUSH PRIVILEGES;"
     /etc/init.d/mysql restart
 doselect
 }
