@@ -244,12 +244,12 @@ function installmysql {
    apt-get install phpmyadmin -y
    #解除绑定，允许远程访问
    sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
-   echo "Please input root password to GRANT ALL PRIVILEGES"
-    read sqlPASSWORD
+   #echo "Please input root password to GRANT ALL PRIVILEGES"
+   # read sqlPASSWORD
    #赋予root用户远程权限
-    mysql -u root -p“${sqlPASSWORD}” -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${sqlPASSWORD}' WITH GRANT OPTION;"
-    mysql -u root -p“${sqlPASSWORD}” -e "FLUSH PRIVILEGES;"
-    /etc/init.d/mysql restart
+    #mysql -u root -p“${sqlPASSWORD}” -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${sqlPASSWORD}' WITH GRANT OPTION;"
+    #mysql -u root -p“${sqlPASSWORD}” -e "FLUSH PRIVILEGES;"
+    #/etc/init.d/mysql restart
 doselect
 }
 #功能6 安装serverspeeder
