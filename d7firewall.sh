@@ -1,34 +1,21 @@
 
 #Çå¿ÕÅäÖÃ
- iptables -F
- iptables -X
-# iptables -t nat -F
-# iptables -t nat -X
-# iptables -t mangle -F
-# iptables -t mangle -X
+iptables -F
 
-# SMTP Ports
-#iptables -A OUTPUT -p tcp -m multiport --dports 25,26,465 -j REJECT --reject-with tcp-reset
-iptables -A OUTPUT -p tcp -m multiport --dports 25,26,465 -j DROP
-iptables -A OUTPUT -p udp -m multiport --dports 25,26,465 -j DROP
-# POP Ports
-#iptables -A OUTPUT -p tcp -m multiport --dports 109,110,995 -j REJECT --reject-with tcp-reset
-iptables -A OUTPUT -p tcp -m multiport --dports 109,110,995 -j DROP
-iptables -A OUTPUT -p udp -m multiport --dports 109,110,995 -j DROP
+iptables -A FORWARD -p tcp --dport 25 -j DROP
+iptables -A FORWARD -p tcp --dport 465 -j DROP
+iptables -A INPUT -p tcp --dport 25  -j DROP
+iptables -A INPUT -p tcp --dport 465  -j DROP
+iptables -A OUTPUT -p tcp --dport 25 -j DROP
+iptables -A OUTPUT -p tcp --dport 465 -j DROP
 
-# IMAP Ports
-#iptables -A OUTPUT -p tcp -m multiport --dports 143,218,220,993 -j REJECT --reject-with tcp-reset
-iptables -A OUTPUT -p tcp -m multiport --dports 143,218,220,993 -j DROP
-iptables -A OUTPUT -p udp -m multiport --dports 143,218,220,993 -j DROP
-
-# Other Mail Services
-iptables -A OUTPUT -p tcp -m multiport --dports 24,50,57,158,209,587,1109 -j REJECT --reject-with tcp-reset
-iptables -A OUTPUT -p udp -m multiport --dports 24,50,57,158,209,587,1109 -j DROP
-
+iptables -A OUTPUT -p tcp -m multiport --dports 25,26,109,110,143,220,366,465,587,691,993,995,2710,6881 -j REJECT --reject-with tcp-reset
+iptables -A OUTPUT -p udp -m multiport --dports 25,26,109,110,143,220,366,465,587,691,993,995,2710,6881 -j DROP
 
 #±£´æÅäÖÃ
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
+iptables -A FORWARD -j REJECT
 #Ê¹ÅäÖÃÉúÐ§
 touch /etc/iptables.up.rules
 iptables-save > /etc/iptables.up.rules
