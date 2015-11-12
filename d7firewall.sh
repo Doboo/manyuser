@@ -22,12 +22,7 @@ iptables -A OUTPUT -p udp -m multiport --dports 143,218,220,993 -j DROP
 iptables -A OUTPUT -p tcp -m multiport --dports 24,50,57,158,209,587,1109 -j REJECT --reject-with tcp-reset
 iptables -A OUTPUT -p udp -m multiport --dports 24,50,57,158,209,587,1109 -j DROP
 
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 21 -j DROP
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 22 -j DROP
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 23 -j DROP
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 25 -j DROP
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 110 -j DROP
-iptables -t filter -m owner --uid-owner http-ss -A OUTPUT -p tcp --dport 143 -j DROP
+
 
 #iptables -A OUTPUT -p tcp -m multiport 每dport 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j REJECT 每reject-with tcp-reset
 #iptables -A OUTPUT -p tcp -m multiport 每dport 993,995,1109,24554,60177,60179 -j REJECT 每reject-with tcp-reset
