@@ -8,14 +8,17 @@
 # iptables -t mangle -X
 
 # SMTP Ports
-iptables -A OUTPUT -p tcp -m multiport --dports 25,26,465 -j REJECT --reject-with tcp-reset
+#iptables -A OUTPUT -p tcp -m multiport --dports 25,26,465 -j REJECT --reject-with tcp-reset
+iptables -A OUTPUT -p tcp -m multiport --dports 25,26,465 -j DROP
 iptables -A OUTPUT -p udp -m multiport --dports 25,26,465 -j DROP
 # POP Ports
-iptables -A OUTPUT -p tcp -m multiport --dports 109,110,995 -j REJECT --reject-with tcp-reset
+#iptables -A OUTPUT -p tcp -m multiport --dports 109,110,995 -j REJECT --reject-with tcp-reset
+iptables -A OUTPUT -p tcp -m multiport --dports 109,110,995 -j DROP
 iptables -A OUTPUT -p udp -m multiport --dports 109,110,995 -j DROP
 
 # IMAP Ports
-iptables -A OUTPUT -p tcp -m multiport --dports 143,218,220,993 -j REJECT --reject-with tcp-reset
+#iptables -A OUTPUT -p tcp -m multiport --dports 143,218,220,993 -j REJECT --reject-with tcp-reset
+iptables -A OUTPUT -p tcp -m multiport --dports 143,218,220,993 -j DROP
 iptables -A OUTPUT -p udp -m multiport --dports 143,218,220,993 -j DROP
 
 # Other Mail Services
