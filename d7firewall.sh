@@ -22,11 +22,9 @@ iptables -A OUTPUT -p udp -m multiport --dports 143,218,220,993 -j DROP
 iptables -A OUTPUT -p tcp -m multiport --dports 24,50,57,158,209,587,1109 -j REJECT --reject-with tcp-reset
 iptables -A OUTPUT -p udp -m multiport --dports 24,50,57,158,209,587,1109 -j DROP
 
-
-
-iptables -A OUTPUT -p tcp -m multiport 每dport 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j REJECT 每reject-with tcp-reset
-iptables -A OUTPUT -p tcp -m multiport 每dport 993,995,1109,24554,60177,60179 -j REJECT 每reject-with tcp-reset
-iptables -A OUTPUT -p udp -m multiport 每dport 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j DROP
+iptables -A OUTPUT -p tcp -m multiport 每dports 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j REJECT 每reject-with tcp-reset
+iptables -A OUTPUT -p tcp -m multiport 每dports 993,995,1109,24554,60177,60179 -j REJECT 每reject-with tcp-reset
+iptables -A OUTPUT -p udp -m multiport 每dports 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j DROP
 #悵湔饜离
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
