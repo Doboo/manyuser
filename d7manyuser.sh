@@ -215,7 +215,8 @@ function installsspanel {
 	rm -rf /var/www
 	
 	cd /var/
-	git clone -b new https://doboo@github.com/Doboo/ss-panel.git 
+	git clone  https://doboo@github.com/Doboo/ss-panel.git 
+	#git clone -b new https://doboo@github.com/Doboo/ss-panel.git 
 	mv ss-panel www
 	#修改数据库连接
 	sed -i 's/tuanDB/tuan'$tuannum'/g' /var/www/lib/config.php
