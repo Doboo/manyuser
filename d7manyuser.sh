@@ -199,15 +199,27 @@ function installhttp {
 	/etc/init.d/apache2 restart
 	#Getting MySQL Support In PHP5
 	apt-cache search php5
-	apt-get install php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl -y
+	apt-get install php5-mysql  php5-ming php5-ps  -y
+	apt-get -y install php5-mysqlnd php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl
 	/etc/init.d/apache2 restart
 	apt-get install php-apc -y
+	/etc/init.d/apache2 restart
+	#修改网站端口
+	sed -i 's/VirtualHost *:80/VirtualHost *:8080/g' /etc/apache2/sites-enabled/000-default
+	sed -i 's/80/8080/g' /etc/apache2/sites-enabled/000-default.conf
+	sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+	#修改网站目录
+	sed -i 's/html//g' /etc/apache2/sites-enabled/000-default.conf
+	
+	#重启服务
 	/etc/init.d/apache2 restart
 	doselect
 }	
 #功能3安装前台页面程序，
 
 function installsspanel {
+
+	
 	echo "Please input the tuanss number "
 	read  tuannum
 	#删除原来的程序
@@ -232,9 +244,8 @@ function installsspanel {
 	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
 	sed -i 's/000000/'$tuannum'/g' /var/www/lib/config.php
 	sed -i 's/mysitename/tuanss'$tuannum'/g' /var/www/lib/config.php
-	#修改网站端口
-	sed -i 's/VirtualHost *:80/VirtualHost *:8080/g' /etc/apache2/sites-enabled/000-default
-	sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+
+	
 	
 	doselect
 }

@@ -1,44 +1,47 @@
 
 #清空配置
 iptables -F
-iptables -X
+#默认策略
 
+#允许出的
 iptables -A OUTPUT -o lo -j ACCEPT
-iptables -A INPUT -i lo -j ACCEPT
-#DNS
-iptables -A OUTPUT -p udp –sport 53 -j ACCEPT
-iptables -A INPUT -p udp –dport 53 -j ACCEPT
-#网页-SQL
-iptables -A OUTPUT -p tcp -m multiport –dport 80,8080,8081,9001443,3306 -j ACCEPT
-iptables -A INPUT -p tcp -m multiport –sport 80,8080,8081,9001443,3306 -j ACCEPT
-#代理-SSH
-iptables -A OUTPUT -p tcp -m multiport –sport 8799,22 -j ACCEPT
-iptables -A INPUT -p tcp -m multiport –dport 8799,22 -j ACCEPT
-#用户
-iptables -A OUTPUT -p tcp –sport914:1200 -j ACCEPT
-iptables -A OUTPUT -p udp –sport914:1200 -j ACCEPT
-iptables -A INPUT -p tcp –dport914:1200 -j ACCEPT
-iptables -A INPUT -p udp –dport50000:1200  -j ACCEPT
-#连接数
-iptables -A OUTPUT -p tcp –sport914:1200  -m connlimit –connlimit-above 20 -j REJECT –reject-with tcp-reset
-iptables -A INPUT -p tcp –dport914:1200  -m connlimit –connlimit-above 20 -j REJECT –reject-with tcp-reset
-#其他
-iptables -A OUTPUT -p icmp -j ACCEPT
-iptables -A INPUT -p icmp -j ACCEPT
-#禁止
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 443 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 3306 -j ACCEPT
+iptables -A OUTPUT -p udp --dport 3306 -j ACCEPT
+# limit
+iptables -A OUTPUT -m limit --limit 30/s -j ACCEPT
+
+#防止发送垃圾端口
+iptables -A FORWARD -p tcp --dport 25 -j DROP
+iptables -A FORWARD -p tcp --dport 465 -j DROP
+iptables -A INPUT -p tcp --dport 25  -j DROP
+iptables -A INPUT -p tcp --dport 465  -j DROP
+iptables -A OUTPUT -p tcp --dport 25 -j DROP
+iptables -A OUTPUT -p tcp --dport 465 -j DROP
+
+
+# iptables -A INPUT -i lo -j ACCEPT
+# iptables -A INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+# iptables -A INPUT  -m state --state ESTABLISHED,RELATED -j ACCEPT
+# iptables -A INPUT -p tcp -m state --state NEW --dport XXX -j ACCEPT
+# iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# iptables -A INPUT -p tcp --dport 80 -m limit --limit 100/minute --limit-burst 100 -j ACCEPT
+# iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+# iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+# iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+# iptables -A INPUT DROP
+# iptables -P INPUT DROP
+
+iptables -P INPUT ACCEPT
+iptables -A OUTPUT -j DROP
 iptables -P OUTPUT DROP
-iptables -P INPUT DROP
+iptables -A FORWARD -j REJECT
 iptables -P FORWARD DROP
-#请把你的SSH22端口改了
-#=====================================
-#屏蔽其他端口
-iptables -A OUTPUT -p tcp -m multiport –dport 21,22,23 -j REJECT –reject-with tcp-reset
-iptables -A OUTPUT -p udp -m multiport –dport 21,22,23 -j DROP
-#=======================================
-#屏蔽邮箱端口
-iptables -A OUTPUT -p tcp -m multiport –dport 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j REJECT –reject-with tcp-reset
-iptables -A OUTPUT -p tcp -m multiport –dport 993,995,1109,24554,60177,60179 -j REJECT –reject-with tcp-reset
-iptables -A OUTPUT -p udp -m multiport –dport 24,25,50,57,105,106,109,110,143,158,209,218,220,465,587 -j DROP
+
 #使配置生效
 touch /etc/iptables.up.rules
 iptables-save > /etc/iptables.up.rules
