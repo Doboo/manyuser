@@ -82,7 +82,10 @@ function installEnvironment {
 	apt-get install debian-keyring debian-archive-keyring -y
 	apt-key update
 	apt-get update -y
-	apt-get upgrade -y
+	#apt-get upgrade -y
+	#安装定时器，编辑器
+	apt-get install cron nano -y
+	chmod +x /etc/rc.local
 	#限制端口速度100M
 	#apt-get install wondershaper -y
 	# limit bandwidth to 100Mb/100Mb on eth0
@@ -237,7 +240,8 @@ function installsspanel {
 	curl -sS https://getcomposer.org/installer | php
 	php composer.phar  install
 	#配置权限，可以生成二维码
-	chmod 777 /var/www/user/
+	chmod 777 /var/www/user/*
+	chmod 777 /var/www/user/tmp
 	#修改网站地址域名，以重置密码等
 	
 	#修改导航菜单和站点名称
