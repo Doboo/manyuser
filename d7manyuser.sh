@@ -153,6 +153,7 @@ function installmanyuser {
 	echo "Please input the tuanss number "
 	read  tuannum
      #安装加密及mysql访问模块
+	 apt-get update
 	apt-get install supervisor -y
     apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
 	apt-get install -y python-pip git python-m2crypto  python-setuptools
@@ -160,8 +161,6 @@ function installmanyuser {
 	cd /root/
 	git clone https://doboo@github.com/Doboo/tuanss.git
 	#用supervisord守护进程启动程序
-	
-	
 	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:tuanss]" >> $mypath
@@ -328,6 +327,22 @@ echo "DefaultRoot             ~" >> /etc/proftpd/proftpd.conf
 /etc/init.d/proftpd restart
 doselect	
   }
+  
+  
+function installfinalspeed {
+cd /root
+rm -f install_fs.sh
+wget  http://fs.d1sm.net/finalspeed/install_fs.sh
+chmod +x install_fs.sh
+./install_fs.sh 2>&1 | tee install.log
+chmod +x /etc/rc.local
+#删除exit 0
+ sed -i '/exit/d' /etc/rc.local
+    #增加启动项
+ echo "sh /fs/start.sh" >>  /etc/rc.local
+
+doselect	
+  }
 #选择要进行的操作
 function doselect {
 echo "Please select your operation "
@@ -340,6 +355,7 @@ echo "5. install mysql and phpmyadmin"
 echo "6. install serverspeeder"
 echo "7. install vps"
 echo "8. install ftp"
+echo "9. install finalspeed"
 
 read num
 case "$num" in
@@ -351,6 +367,7 @@ case "$num" in
 [6] ) (installserverspeeder);;
 [7] ) (installvps);;
 [8] ) (installftp);;
+[9] ) (installfinalspeed);;
 *) echo "OK,Bye!";;
 esac
 }
