@@ -135,7 +135,7 @@ case "$num" in
 esac
 sysctl --system
 #安装ssh登录保护
-apt-get install denyhosts 
+apt-get install denyhosts -y 
 echo "Do you want to change SSH"
 
 echo "1. YES"
@@ -191,6 +191,53 @@ function installmanyuser {
 	 result=${pool[$((RANDOM%num))]}
 	 echo $result
 	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/tuanss/shadowsocks/Config.py
+   	 doselect
+}
+
+
+#功能5
+function shadowsocksR {
+	echo "Please input the tuanss number "
+	read  tuannum
+     #安装加密及mysql访问模块
+	 apt-get update
+	apt-get install supervisor -y
+    apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
+	apt-get install -y python-pip git python-m2crypto  python-setuptools
+    pip install cymysql
+	cd /root/
+	git clone -b manyuser https://github.com/breakwa11/shadowsocks.git
+	#用supervisord守护进程启动程序
+	
+	mypath="/etc/supervisor/supervisord.conf"
+	 echo "[program:tuanss]" >> $mypath
+	 echo "command=python /root/shadowsocks/server.py -c /root/shadowsocks/config.json" >> $mypath
+	 echo "autostart=true" >> $mypath
+	 echo "autorestart=true" >> $mypath
+	 echo "user=root" >> $mypath
+	 #是否将程序错误信息重定向的到文件
+	 echo "redirect_stderr=true" >> $mypath
+	 #将程序输出重定向到该文件
+	 echo "stdout_logfile=/var/log/ssr.log" >> $mypath
+	 #将程序错误信息重定向到该文件
+	 echo "stderr_logfile=/var/log/ssr-err.log" >> $mypath
+	  #通过网页访问日志
+	 echo "[inet_http_server]" >> $mypath
+	 #IP和绑定端口
+	 echo "port = 0.0.0.0:9001" >> $mypath
+	 #管理员名称
+	 echo "username = admin" >> $mypath
+	 #管理员密码
+     echo "password = 111111" >> $mypath
+
+	#修改数据库地址
+	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/shadowsocks/Config.py
+	 #将后台管理管理程序的端口随机化
+	 pool=(23330 23331 23332 23333 23334 23335 23336 23337 23338 23339 23339)
+	 num=${#pool[*]}
+	 result=${pool[$((RANDOM%num))]}
+	 echo $result
+	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/shadowsocks/Config.py
    	 doselect
 }
 #功能2
@@ -353,7 +400,7 @@ echo "3. install ss-panel"
 echo "4. install manyuser"
 echo "5. install mysql and phpmyadmin"
 echo "6. install serverspeeder"
-echo "7. install vps"
+echo "7. install shadowsocksR"
 echo "8. install ftp"
 echo "9. install finalspeed"
 
@@ -365,7 +412,7 @@ case "$num" in
 [4] ) (installmanyuser);;
 [5] ) (installmysql);;
 [6] ) (installserverspeeder);;
-[7] ) (installvps);;
+[7] ) (shadowsocksR);;
 [8] ) (installftp);;
 [9] ) (installfinalspeed);;
 *) echo "OK,Bye!";;
