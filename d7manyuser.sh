@@ -97,6 +97,17 @@ function installEnvironment {
 	#安装系统时间同步工具
 	apt-get install ntpdate -y
 	ntpdate 129.6.15.28
+	
+	#安装supervisord
+	apt-get install supervisor -y
+	mypath="/etc/supervisor/supervisord.conf"
+	 echo "[inet_http_server]" >> $mypath
+	 #IP和绑定端口
+	 echo "port = 0.0.0.0:9001" >> $mypath
+	 #管理员名称
+	 echo "username = admin" >> $mypath
+	 #管理员密码
+     echo "password = 111111" >> $mypath
 	#ntpdate time.nist.org 
 	#创建定时重启任务
 	#crontab -e
@@ -175,14 +186,6 @@ function installmanyuser {
 	 #将程序错误信息重定向到该文件
 	 echo "stderr_logfile=/var/log/tuanss-err.log" >> $mypath
 	  #通过网页访问日志
-	 echo "[inet_http_server]" >> $mypath
-	 #IP和绑定端口
-	 echo "port = 0.0.0.0:9001" >> $mypath
-	 #管理员名称
-	 echo "username = admin" >> $mypath
-	 #管理员密码
-     echo "password = 111111" >> $mypath
-
 	#修改数据库地址
 	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/tuanss/shadowsocks/Config.py
 	 #将后台管理管理程序的端口随机化
@@ -210,7 +213,7 @@ function shadowsocksR {
 	#用supervisord守护进程启动程序
 	
 	mypath="/etc/supervisor/supervisord.conf"
-	 echo "[program:tuanss]" >> $mypath
+	 echo "[program:shadowsocksR]" >> $mypath
 	 echo "command=python /root/shadowsocks/server.py -c /root/shadowsocks/config.json" >> $mypath
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
@@ -222,13 +225,7 @@ function shadowsocksR {
 	 #将程序错误信息重定向到该文件
 	 echo "stderr_logfile=/var/log/ssr-err.log" >> $mypath
 	  #通过网页访问日志
-	 echo "[inet_http_server]" >> $mypath
-	 #IP和绑定端口
-	 echo "port = 0.0.0.0:9001" >> $mypath
-	 #管理员名称
-	 echo "username = admin" >> $mypath
-	 #管理员密码
-     echo "password = 111111" >> $mypath
+	
 
 	#修改数据库地址
 	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/shadowsocks/Config.py
