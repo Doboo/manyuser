@@ -12,6 +12,19 @@ iptables -A OUTPUT -p tcp --dport 465 -j DROP
 iptables -A OUTPUT -p tcp -m multiport --dports 25,26,109,110,143,220,366,465,587,691,993,995,2710,6881 -j REJECT --reject-with tcp-reset
 iptables -A OUTPUT -p udp -m multiport --dports 25,26,109,110,143,220,366,465,587,691,993,995,2710,6881 -j DROP
 
+printf "
+####################################################
+# Here is your IPs !                               #
+####################################################
+"
+#≈‰÷√◊™∑¢IP
+	if [ "${NETWORKIP}" == "" ];then
+		/sbin/ifconfig | grep "inet addr:" | cut -d ":" -f 2 | awk '{print $1}' | grep -v "127.0.0.1"
+		read -p "Input your IP for netforward:" NETWORKIP
+	fi
+
+iptables -t nat -A POSTROUTING -s 192.168.7.0/24 -j SNAT --to-source ${NETWORKIP}
+
 #±£¥Ê≈‰÷√
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
