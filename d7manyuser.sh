@@ -283,7 +283,7 @@ function installsspanel {
 	curl -sS https://getcomposer.org/installer | php
 	php composer.phar  install
 	#配置权限，可以生成二维码
-	chmod 777 /var/www/user/*
+	chmod 777 /var/www/user/
 	chmod 777 /var/www/user/tmp
 	#修改网站地址域名，以重置密码等
 	
