@@ -376,7 +376,11 @@ doselect
 function installfinalspeed {
 cd /root
 rm -f install_fs.sh
-wget  http://fs.d1sm.net/finalspeed/install_fs.sh
+
+#wget http://finalspeed.org/fs/install_fs.sh
+wget http://104.129.177.41/install_fs.sh
+
+#wget  http://fs.d1sm.net/finalspeed/install_fs.sh
 chmod +x install_fs.sh
 ./install_fs.sh 2>&1 | tee install.log
 chmod +x /etc/rc.local
