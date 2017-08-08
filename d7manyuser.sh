@@ -4,7 +4,7 @@ if [[ $(id -u) != "0" ]]; then
     printf "\e[42m\e[31mError: You must be root to run this install script.\e[0m\n"
     exit 1
 fi
-#¹¦ÄÜ1
+#åŠŸèƒ½1
 function highlatency {
 	cat << _EOF_ >/etc/sysctl.d/local.conf
 fs.file-max = 51200
@@ -31,9 +31,9 @@ net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
 _EOF_
 
-#¿ªÆôËã·¨
+#å¼€å¯ç®—æ³•
 /sbin/modprobe tcp_hybla
-#ÓÅÏÈÊ¹ÓÃ
+#ä¼˜å…ˆä½¿ç”¨
 echo "net.ipv4.tcp_congestion_control=hybla" >> /etc/sysctl.conf
 
 
@@ -67,61 +67,61 @@ _EOF_
 }
 
 function changssh {
-#¸ü¸Ässh¶Ë¿Ú
+#æ›´æ”¹sshç«¯å£
  sed -i 's/Port 22/Port 8799/g'  /etc/ssh/sshd_config
-#ÆôÓÃssh keyµÇÂ¼£¬
+#å¯ç”¨ssh keyç™»å½•ï¼Œ
   mkdir /root/.ssh
  echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAiH6uaXQA0K54of5TdpGP9v2z9CaXqnnwyNoCMwkRYPH3X7CJk61HunR59zgDoAbT/+eJiCbSEN5/27gGd1kysct/4PDzJ/JpJI3OhKk2185LRoa/BXZaGfEUz4r53M01tGTMyom9VGjFroTUHeBkj2BfAzIo+SFp+ij1RRzM75ZN/y84rGUvGR8+tM3+PbE+6W0mvY6EdKD0YY0bGtcO9xMaFB7sfZk/fUxQSNnrkfYNKA5rWIlLC3JNXwp0M77dK2pSvU3mGodC6UvWv2GU4Q++tj577M9QTv2bI6Lt7nwQHORcAZ5oknNjTKfO8cyvzN8jjCUKzj5zLave6YJB2Q== rsa-key-20150202" >> /root/.ssh/authorized_keys
 	
 	 sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-	#½ûÓÃÃÜÂëµÇÂ¼
+	#ç¦ç”¨å¯†ç ç™»å½•
 	 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   }
 function installEnvironment {
-	#½â¾öpublic keyµÄÎÊÌâ
+	#è§£å†³public keyçš„é—®é¢˜
 	apt-get install debian-keyring debian-archive-keyring -y
 	apt-key update
 	apt-get update -y
 	#apt-get upgrade -y
-	#°²×°¶¨Ê±Æ÷£¬±à¼­Æ÷
+	#å®‰è£…å®šæ—¶å™¨ï¼Œç¼–è¾‘å™¨
 	apt-get install cron nano -y
 	chmod +x /etc/rc.local
-	#ÏŞÖÆ¶Ë¿ÚËÙ¶È100M
+	#é™åˆ¶ç«¯å£é€Ÿåº¦100M
 	#apt-get install wondershaper -y
 	# limit bandwidth to 100Mb/100Mb on eth0
 	#wondershaper eth0 100000 100000
-	#ĞŞ¸ÄÏµÍ³Ê±ÇøÉèÖÃ
+	#ä¿®æ”¹ç³»ç»Ÿæ—¶åŒºè®¾ç½®
 	rm /etc/localtime
 	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 	dpkg-reconfigure tzdata
-	#°²×°ÏµÍ³Ê±¼äÍ¬²½¹¤¾ß
+	#å®‰è£…ç³»ç»Ÿæ—¶é—´åŒæ­¥å·¥å…·
 	apt-get install ntpdate -y
 	ntpdate 129.6.15.28
 	
-	#°²×°supervisord
+	#å®‰è£…supervisord
 	apt-get install supervisor -y
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[inet_http_server]" >> $mypath
-	 #IPºÍ°ó¶¨¶Ë¿Ú
-	 echo "port = 0.0.0.0:9001" >> $mypath
-	 #¹ÜÀíÔ±Ãû³Æ
+	 #IPå’Œç»‘å®šç«¯å£
+	 echo "port = 0.0.0.0:9009" >> $mypath
+	 #ç®¡ç†å‘˜åç§°
 	 echo "username = admin" >> $mypath
-	 #¹ÜÀíÔ±ÃÜÂë
-     echo "password = 111111" >> $mypath
+	 #ç®¡ç†å‘˜å¯†ç 
+     echo "password = admin" >> $mypath
 	#ntpdate time.nist.org 
-	#´´½¨¶¨Ê±ÖØÆôÈÎÎñ
+	#åˆ›å»ºå®šæ—¶é‡å¯ä»»åŠ¡
 	#crontab -e
-	#ÉèÖÃ¶¨Ê±Æ÷¶¨Ê±ÖØÆô
+	#è®¾ç½®å®šæ—¶å™¨å®šæ—¶é‡å¯
 	echo "00 05 * * * root /sbin/reboot" >>/etc/crontab
-	#ÖØÆô¶¨Ê±Æ÷
+	#é‡å¯å®šæ—¶å™¨
 	/etc/init.d/cron restart
 	#apt-get install unzip -y
-	#ĞŞ¸ÄÏµÍ³²ÎÊıÏŞÖÆ,·½·¨1
+	#ä¿®æ”¹ç³»ç»Ÿå‚æ•°é™åˆ¶,æ–¹æ³•1
 	echo "*                soft    nofile          65535" >>  /etc/security/limits.conf
 	echo "*                hard    nofile          65535" >>  /etc/security/limits.conf
-	 #·½·¨2
+	 #æ–¹æ³•2
 	 #echo "ulimit -SHn 65535" >> /etc/rc.local
-	 #·½·¨3
+	 #æ–¹æ³•3
 	 echo "ulimit -SHn 65535" >> /etc/profile
      echo "ulimit -n 51200" >> /etc/default/supervisor
     #echo "ulimit -Sn 4096" >> /etc/default/supervisor
@@ -130,7 +130,7 @@ function installEnvironment {
    #
    echo "session required pam_limits.so" >> /etc/pam.d/common-session
    
-#²é¿´Ö§³ÖµÄÓÅ»¯Ëã·¨
+#æŸ¥çœ‹æ”¯æŒçš„ä¼˜åŒ–ç®—æ³•
 sysctl net.ipv4.tcp_available_congestion_control
 
 echo "Please select your latency"
@@ -145,7 +145,7 @@ case "$num" in
 *) echo "OK,Bye!";;
 esac
 sysctl --system
-#°²×°sshµÇÂ¼±£»¤
+#å®‰è£…sshç™»å½•ä¿æŠ¤
 apt-get install denyhosts -y 
 echo "Do you want to change SSH"
 
@@ -159,11 +159,11 @@ esac
 	
 	doselect
  }
-#¹¦ÄÜ5
+#åŠŸèƒ½5
 function installmanyuser {
 	echo "Please input the tuanss number "
 	read  tuannum
-     #°²×°¼ÓÃÜ¼°mysql·ÃÎÊÄ£¿é
+     #å®‰è£…åŠ å¯†åŠmysqlè®¿é—®æ¨¡å—
 	 apt-get update
 	apt-get install supervisor -y
     apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
@@ -171,7 +171,7 @@ function installmanyuser {
     pip install cymysql
 	cd /root/
 	git clone https://doboo@github.com/Doboo/tuanss.git
-	#ÓÃsupervisordÊØ»¤½ø³ÌÆô¶¯³ÌĞò
+	#ç”¨supervisordå®ˆæŠ¤è¿›ç¨‹å¯åŠ¨ç¨‹åº
 	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:tuanss]" >> $mypath
@@ -179,16 +179,16 @@ function installmanyuser {
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
 	 echo "user=root" >> $mypath
-	 #ÊÇ·ñ½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨ÏòµÄµ½ÎÄ¼ş
+	 #æ˜¯å¦å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘çš„åˆ°æ–‡ä»¶
 	 echo "redirect_stderr=true" >> $mypath
-	 #½«³ÌĞòÊä³öÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºè¾“å‡ºé‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stdout_logfile=/var/log/tuanss.log" >> $mypath
-	 #½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stderr_logfile=/var/log/tuanss-err.log" >> $mypath
-	  #Í¨¹ıÍøÒ³·ÃÎÊÈÕÖ¾
-	#ĞŞ¸ÄÊı¾İ¿âµØÖ·
+	  #é€šè¿‡ç½‘é¡µè®¿é—®æ—¥å¿—
+	#ä¿®æ”¹æ•°æ®åº“åœ°å€
 	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/tuanss/shadowsocks/Config.py
-	 #½«ºóÌ¨¹ÜÀí¹ÜÀí³ÌĞòµÄ¶Ë¿ÚËæ»ú»¯
+	 #å°†åå°ç®¡ç†ç®¡ç†ç¨‹åºçš„ç«¯å£éšæœºåŒ–
 	 pool=(23330 23331 23332 23333 23334 23335 23336 23337 23338 23339 23339)
 	 num=${#pool[*]}
 	 result=${pool[$((RANDOM%num))]}
@@ -198,11 +198,11 @@ function installmanyuser {
 }
 
 
-#¹¦ÄÜ5
+#åŠŸèƒ½5
 function shadowsocksR {
 	echo "Please input the tuanss number "
 	read  tuannum
-     #°²×°¼ÓÃÜ¼°mysql·ÃÎÊÄ£¿é
+     #å®‰è£…åŠ å¯†åŠmysqlè®¿é—®æ¨¡å—
 	 apt-get update
 	apt-get install supervisor -y
     apt-get install -y --force-yes build-essential autoconf libtool libssl-dev curl 
@@ -210,7 +210,7 @@ function shadowsocksR {
     pip install cymysql
 	cd /root/
 	git clone -b manyuser https://github.com/breakwa11/shadowsocks.git
-	#ÓÃsupervisordÊØ»¤½ø³ÌÆô¶¯³ÌĞò
+	#ç”¨supervisordå®ˆæŠ¤è¿›ç¨‹å¯åŠ¨ç¨‹åº
 	
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[program:shadowsocksR]" >> $mypath
@@ -218,18 +218,18 @@ function shadowsocksR {
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
 	 echo "user=root" >> $mypath
-	 #ÊÇ·ñ½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨ÏòµÄµ½ÎÄ¼ş
+	 #æ˜¯å¦å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘çš„åˆ°æ–‡ä»¶
 	 echo "redirect_stderr=true" >> $mypath
-	 #½«³ÌĞòÊä³öÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºè¾“å‡ºé‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stdout_logfile=/var/log/ssr.log" >> $mypath
-	 #½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stderr_logfile=/var/log/ssr-err.log" >> $mypath
-	  #Í¨¹ıÍøÒ³·ÃÎÊÈÕÖ¾
+	  #é€šè¿‡ç½‘é¡µè®¿é—®æ—¥å¿—
 	
 
-	#ĞŞ¸ÄÊı¾İ¿âµØÖ·
+	#ä¿®æ”¹æ•°æ®åº“åœ°å€
 	 sed -i 's/tuanDB/tuan'$tuannum'/g' /root/shadowsocks/Config.py
-	 #½«ºóÌ¨¹ÜÀí¹ÜÀí³ÌĞòµÄ¶Ë¿ÚËæ»ú»¯
+	 #å°†åå°ç®¡ç†ç®¡ç†ç¨‹åºçš„ç«¯å£éšæœºåŒ–
 	 pool=(23330 23331 23332 23333 23334 23335 23336 23337 23338 23339 23339)
 	 num=${#pool[*]}
 	 result=${pool[$((RANDOM%num))]}
@@ -237,7 +237,7 @@ function shadowsocksR {
 	 sed -i 's/MANAGE_PORT = 23333/MANAGE_PORT = '$result'/g' /root/shadowsocks/Config.py
    	 doselect
 }
-#¹¦ÄÜ2
+#åŠŸèƒ½2
 function installhttp {
 	apt-get install apache2 -y
 	#Installing PHP5
@@ -250,25 +250,25 @@ function installhttp {
 	/etc/init.d/apache2 restart
 	apt-get install php-apc -y
 	/etc/init.d/apache2 restart
-	#ĞŞ¸ÄÍøÕ¾¶Ë¿Ú
+	#ä¿®æ”¹ç½‘ç«™ç«¯å£
 	sed -i 's/VirtualHost *:80/VirtualHost *:8080/g' /etc/apache2/sites-enabled/000-default
 	sed -i 's/80/8080/g' /etc/apache2/sites-enabled/000-default.conf
 	sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-	#ĞŞ¸ÄÍøÕ¾Ä¿Â¼
+	#ä¿®æ”¹ç½‘ç«™ç›®å½•
 	sed -i 's/html//g' /etc/apache2/sites-enabled/000-default.conf
 	
-	#ÖØÆô·şÎñ
+	#é‡å¯æœåŠ¡
 	/etc/init.d/apache2 restart
 	doselect
 }	
-#¹¦ÄÜ3°²×°Ç°Ì¨Ò³Ãæ³ÌĞò£¬
+#åŠŸèƒ½3å®‰è£…å‰å°é¡µé¢ç¨‹åºï¼Œ
 
 function installsspanel {
 
 	
 	echo "Please input the tuanss number "
 	read  tuannum
-	#É¾³ıÔ­À´µÄ³ÌĞò
+	#åˆ é™¤åŸæ¥çš„ç¨‹åº
 	rm -rf /var/www/*
 	rm -rf /var/www
 	
@@ -276,18 +276,18 @@ function installsspanel {
 	git clone  https://doboo@github.com/Doboo/ss-panel.git 
 	#git clone -b new https://doboo@github.com/Doboo/ss-panel.git 
 	mv ss-panel www
-	#ĞŞ¸ÄÊı¾İ¿âÁ¬½Ó
+	#ä¿®æ”¹æ•°æ®åº“è¿æ¥
 	sed -i 's/tuanDB/tuan'$tuannum'/g' /var/www/lib/config.php
-	#°²×°¸÷ÖÖÒÀÀµ£¬mailgun
+	#å®‰è£…å„ç§ä¾èµ–ï¼Œmailgun
 	cd /var/www/
 	curl -sS https://getcomposer.org/installer | php
 	php composer.phar  install
-	#ÅäÖÃÈ¨ÏŞ£¬¿ÉÒÔÉú³É¶şÎ¬Âë
+	#é…ç½®æƒé™ï¼Œå¯ä»¥ç”ŸæˆäºŒç»´ç 
 	chmod 777 /var/www/user/
 	chmod 777 /var/www/user/tmp
-	#ĞŞ¸ÄÍøÕ¾µØÖ·ÓòÃû£¬ÒÔÖØÖÃÃÜÂëµÈ
+	#ä¿®æ”¹ç½‘ç«™åœ°å€åŸŸåï¼Œä»¥é‡ç½®å¯†ç ç­‰
 	
-	#ĞŞ¸Äµ¼º½²Ëµ¥ºÍÕ¾µãÃû³Æ
+	#ä¿®æ”¹å¯¼èˆªèœå•å’Œç«™ç‚¹åç§°
 	sed -i 's/000000/'$tuannum'/g' /var/www/index.php
 	sed -i 's/000000/'$tuannum'/g' /var/www/lib/config.php
 	sed -i 's/mysitename/tuanss'$tuannum'/g' /var/www/lib/config.php
@@ -297,21 +297,21 @@ function installsspanel {
 	doselect
 }
 
-#¹¦ÄÜ5 °²×°mysqlÊı¾İ¿âºÍphp myadmin
+#åŠŸèƒ½5 å®‰è£…mysqlæ•°æ®åº“å’Œphp myadmin
 function installmysql {
    apt-get install mysql-server mysql-client -y
    #apt-get install phpmyadmin -y
-   #½â³ı°ó¶¨£¬ÔÊĞíÔ¶³Ì·ÃÎÊ
+   #è§£é™¤ç»‘å®šï¼Œå…è®¸è¿œç¨‹è®¿é—®
    sed -i 's/bind-address/#bind-address/g' /etc/mysql/my.cnf
    #echo "Please input root password to GRANT ALL PRIVILEGES"
    # read sqlPASSWORD
-   #¸³ÓèrootÓÃ»§Ô¶³ÌÈ¨ÏŞ
-    #mysql -u root -p¡°${sqlPASSWORD}¡± -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${sqlPASSWORD}' WITH GRANT OPTION;"
-    #mysql -u root -p¡°${sqlPASSWORD}¡± -e "FLUSH PRIVILEGES;"
+   #èµ‹äºˆrootç”¨æˆ·è¿œç¨‹æƒé™
+    #mysql -u root -pâ€œ${sqlPASSWORD}â€ -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${sqlPASSWORD}' WITH GRANT OPTION;"
+    #mysql -u root -pâ€œ${sqlPASSWORD}â€ -e "FLUSH PRIVILEGES;"
     #/etc/init.d/mysql restart
 doselect
 }
-#¹¦ÄÜ6 °²×°serverspeeder
+#åŠŸèƒ½6 å®‰è£…serverspeeder
 function installserverspeeder {
 	wget http://my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz
 	tar xzvf serverSpeederInstaller.tar.gz 
@@ -320,12 +320,12 @@ function installserverspeeder {
 	sed -i 's/advinacc="0"/advinacc="1"/g' /serverspeeder/etc/config
 	sed -i 's/maxmode="0"/maxmode="1"/g' /serverspeeder/etc/config
 	sed -i 's/rsc=""/rsc="1"/g' /serverspeeder/etc/config
-	  #Ôö¼ÓÆô¶¯Ïî
+	  #å¢åŠ å¯åŠ¨é¡¹
 	sed -i '/exit/d' /etc/rc.local
     echo "/serverspeeder/bin/serverSpeeder.sh start" >>  /etc/rc.local
 	doselect
   }
-#¹¦ÄÜ7 °²×°vps´úÀí£¬ĞèÕ¼ÓÃ443¶Ë¿Ú
+#åŠŸèƒ½7 å®‰è£…vpsä»£ç†ï¼Œéœ€å ç”¨443ç«¯å£
 function installvps {
 cd /root/
 wget  https://github.com/phuslu/goproxy/releases/download/goproxy/vps_linux_amd64.tar.bz2
@@ -338,28 +338,28 @@ mypath="/etc/supervisor/supervisord.conf"
 	 echo "autostart=true" >> $mypath
 	 echo "autorestart=true" >> $mypath
 	 echo "user=root" >> $mypath
-	 #ÊÇ·ñ½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨ÏòµÄµ½ÎÄ¼ş
+	 #æ˜¯å¦å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘çš„åˆ°æ–‡ä»¶
 	 echo "redirect_stderr=true" >> $mypath
-	 #½«³ÌĞòÊä³öÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºè¾“å‡ºé‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stdout_logfile=/var/log/vps.log" >> $mypath
-	 #½«³ÌĞò´íÎóĞÅÏ¢ÖØ¶¨Ïòµ½¸ÃÎÄ¼ş
+	 #å°†ç¨‹åºé”™è¯¯ä¿¡æ¯é‡å®šå‘åˆ°è¯¥æ–‡ä»¶
 	 echo "stderr_logfile=/var/log/vps.log" >> $mypath
 	doselect  
   }
 
 #
-#´´½¨proftpd ftp·şÎñÆ÷
+#åˆ›å»ºproftpd ftpæœåŠ¡å™¨
 function installftp {
 aptitude install proftpd -y
 
 mkdir /var/ftp
-#¸øÓèÎÄ¼ş¼ĞÈ¨ÏŞ
+#ç»™äºˆæ–‡ä»¶å¤¹æƒé™
 chmod 777 /var/ftp
-#Ôö¼ÓÓÃ»§
+#å¢åŠ ç”¨æˆ·
 echo "Please input the ftp username"
 read  ftpuser
 useradd -d /var/ftp -s /usr/sbin/nologin $ftpuser
-#ÉèÖÃÃÜÂë
+#è®¾ç½®å¯†ç 
 passwd $ftpuser
 sed -i '/RequireValidShell/d' /etc/proftpd/proftpd.conf
 #sed -i 's/# RequireValidShell"/RequireValidShell/g' /etc/proftpd/proftpd.conf
@@ -383,14 +383,14 @@ wget http://104.129.177.41/install_fs.sh
 chmod +x install_fs.sh
 ./install_fs.sh 2>&1 | tee install.log
 chmod +x /etc/rc.local
-#É¾³ıexit 0
+#åˆ é™¤exit 0
  sed -i '/exit/d' /etc/rc.local
-    #Ôö¼ÓÆô¶¯Ïî
+    #å¢åŠ å¯åŠ¨é¡¹
  echo "sh /fs/start.sh" >>  /etc/rc.local
 
 doselect	
   }
-#Ñ¡ÔñÒª½øĞĞµÄ²Ù×÷
+#é€‰æ‹©è¦è¿›è¡Œçš„æ“ä½œ
 function doselect {
 echo "Please select your operation "
 echo "which do you want to?input the number."
@@ -418,8 +418,8 @@ case "$num" in
 *) echo "OK,Bye!";;
 esac
 }
-#¸ù¾İÏµÍ³½øĞĞÅäÖÃ
-#ÏÔÊ¾ĞÅÏ¢
+#æ ¹æ®ç³»ç»Ÿè¿›è¡Œé…ç½®
+#æ˜¾ç¤ºä¿¡æ¯
 printf "
 ####################################################
 #                                                  #
@@ -428,7 +428,7 @@ printf "
 #                                                  #
 ####################################################
 "
-#¿ªÊ¼Ñ¡Ôñ°²×°
+#å¼€å§‹é€‰æ‹©å®‰è£…
 
 doselect
 
