@@ -103,11 +103,11 @@ function installEnvironment {
 	mypath="/etc/supervisor/supervisord.conf"
 	 echo "[inet_http_server]" >> $mypath
 	 #IP和绑定端口
-	 echo "port = 0.0.0.0:9009" >> $mypath
+	 echo "port = 0.0.0.0:9001" >> $mypath
 	 #管理员名称
 	 echo "username = admin" >> $mypath
 	 #管理员密码
-     echo "password = admin" >> $mypath
+     echo "password = 111111" >> $mypath
 	#ntpdate time.nist.org 
 	#创建定时重启任务
 	#crontab -e
